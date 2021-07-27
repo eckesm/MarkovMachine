@@ -29,35 +29,22 @@ async function generateTextFromUrl(url) {
 }
 
 function handleOutput(data, source) {
-	// if (filename) {
-	// 	fs.writeFile(filename, data, 'utf8', err => {
-	// 		if (err) {
-	// 			console.log(`Couldn't write to ${filename}:\n ${err}`);
-	// 			process.exit(1);
-	// 		}
-	// 		else {
-	//             console.log(`# no output, but ${filename} contains contents of ${source}`);
-	// 		}
-	// 	});
-	// }
-	// else {
 	const mm = new markov.MarkovMachine(data);
-	mm.makeText();
-	console.log(`Generated text from ${source}:\n ${mm.text}`);
-    console.log(mm.possibleNextWords)
-	// }
+	console.log(`Generated text from ${source}:\n ${mm.makeText()}`);
 }
 
-try {
-	let source = process.argv[2];
-	let path = process.argv[3];
-	if (source === 'file') {
-		generateTextFromFile(path);
-	}
-	else if (source === 'url') {
-		generateTextFromUrl(path);
-	}
-} catch (err) {
-	console.log(`ERROR:\n ${err}`);
+// try {
+let source = process.argv[2];
+let path = process.argv[3];
+if (source === 'file') {
+	generateTextFromFile(path);
+}
+else if (source === 'url') {
+	generateTextFromUrl(path);
+}
+else {
+	// } catch (err) {
+	console.log(`Unknown method: ${source}`);
 	process.exit(1);
 }
+// }

@@ -17,74 +17,92 @@ class MarkovMachine {
 	makeChains() {
 		// TODO
 
-		const possibleNextWords = {};
+		// const possibleNextWords = {};
+		let possibleNextWords = new Map();
 
 		function addWordToMap(word, nextWord) {
-			if (word in possibleNextWords) {
+			// if (word in possibleNextWords) {
+			if (possibleNextWords.has(word)) {
+				possibleNextWords.get(word).push(nextWord);
 			}
 			else {
-				possibleNextWords[word] = [];
+				possibleNextWords.set(word, [ nextWord ]);
 			}
 
-			if (possibleNextWords[word].indexOf(nextWord) === -1) {
-				possibleNextWords[word].push(nextWord);
-			}
+			// if (possibleNextWords[word].indexOf(nextWord) === -1) {
+			// 	possibleNextWords[word].push(nextWord);
+			// }
 		}
 
 		for (let i = 0; i < this.words.length; i++) {
-			if (i === this.words.length - 1) {
-				addWordToMap(this.words[i], null);
-			}
-			else {
-				addWordToMap(this.words[i], this.words[i + 1]);
-			}
+			// if (i === this.words.length - 1) {
+			// 	addWordToMap(this.words[i], null);
+			// }
+			// else {
+			// 	addWordToMap(this.words[i], this.words[i + 1]);
+			// }
+			addWordToMap(this.words[i], this.words[i + 1] || null);
 		}
 
 		// console.log(possibleNextWords);
 		this.possibleNextWords = possibleNextWords;
+		// console.log(possibleNextWords);
 	}
 
 	/** return random text from chains */
 
+	static choice(array) {
+		return array[Math.floor(Math.random() * array.length)];
+	}
+
 	makeText(numWords = 100) {
-		let text;
-		let lastWord;
-		let nextWord;
-		let nextWordList;
-		let minimum = false;
-		let finished = false;
+		// let text;
+		// let lastWord;
+		// let nextWord;
+		// let nextWordList;
+		// let minimum = false;
+		// let finished = false;
 
-		const keys = Object.keys(this.possibleNextWords);
+		let keys = Array.from(this.possibleNextWords.keys());
+		let key = MarkovMachine.choice(keys);
+		let output = [];
 
-		for (let i = 1; finished === false; i++) {
-			if (i === 1) {
-				lastWord = keys[Math.floor(Math.random() * keys.length)];
-				text = lastWord;
-			}
-			else {
-				nextWordList = this.possibleNextWords[lastWord];
-				nextWord = nextWordList[Math.floor(Math.random() * nextWordList.length)];
-				if (nextWord !== null) {
-					text = text + ' ' + nextWord;
-					lastWord = nextWord;
-				}
-				else {
-					if (minimum === false) {
-						// text = text + '. ';
-						lastWord = keys[Math.floor(Math.random() * keys.length)];
-					}
-					else {
-						text = text + '.';
-						finished = true;
-					}
-				}
-			}
-			if (i === numWords - 1) {
-				minimum = true;
-			}
+		while (output.length < numWords && key !== null) {
+			output.push(key);
+			key = MarkovMachine.choice(this.possibleNextWords.get(key));
 		}
-		// console.log(text);
-		this.text = text;
+
+		return output.join(' ');
+
+		// 	for (let i = 1; finished === false; i++) {
+		// 		if (i === 1) {
+		// 			lastWord = keys[Math.floor(Math.random() * keys.length)];
+		// 			text = lastWord;
+		// 		}
+		// 		else {
+		// 			nextWordList = this.possibleNextWords[lastWord];
+		// 			nextWord = nextWordList[Math.floor(Math.random() * nextWordList.length)];
+		// 			if (nextWord !== null) {
+		// 				text = text + ' ' + nextWord;
+		// 				lastWord = nextWord;
+		// 			}
+		// 			else {
+		// 				if (minimum === false) {
+		// 					// text = text + '. ';
+		// 					lastWord = keys[Math.floor(Math.random() * keys.length)];
+		// 				}
+		// 				else {
+		// 					text = text + '.';
+		// 					finished = true;
+		// 				}
+		// 			}
+		// 		}
+		// 		if (i === numWords - 1) {
+		// 			minimum = true;
+		// 		}
+		// 	}
+		// 	// console.log(text);
+		// 	this.text = text;
 	}
 }
 
