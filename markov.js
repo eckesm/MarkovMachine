@@ -70,7 +70,7 @@ class MarkovMachine {
 				}
 				else {
 					if (minimum === false) {
-						text = text + '. ';
+						// text = text + '. ';
 						lastWord = keys[Math.floor(Math.random() * keys.length)];
 					}
 					else {
